@@ -64,3 +64,10 @@ vib*.traj
 
 # Kubernetes secrets (keep secrets.yaml.template, ignore actual secrets)
 k8s/secrets.yaml
+
+# ChemGraph run/test artifacts
+cg_logs/
+runinfo/
+# Parsl numbered run dirs (000/, 001/, ...) and per-block node hostfiles
+[0-9][0-9][0-9]/
+parsl.htex.*.nodes
