@@ -49,7 +49,7 @@ mcp = CGFastMCP(
 
         Available tools:
         1. run_ase: run a single ASE calculation on the configured
-           execution backend. Concurrent calls share one worker pool.
+           execution backend.
         2. molecule_name_to_smiles: resolve a molecule name to SMILES.
         3. smiles_to_coordinate_file: build 3D coordinates from SMILES.
         4. extract_output_json: load results from a run_ase output file.
@@ -79,37 +79,33 @@ mcp = CGFastMCP(
 
 
 def run_ase(params: ASEInputSchema) -> dict:
-    """Run a single ASE calculation on the configured backend.
-
-    The framework's ``to_picklable`` boundary (see
-    :func:`chemgraph.execution.utils.to_picklable`) converts every
-    Pydantic instance to a plain dict before the task is pickled to a
-    backend worker, so on the worker side ``params`` arrives as a dict.
-    ``run_ase_core`` expects an :class:`ASEInputSchema`, so rebuild it
-    here when needed -- this keeps the worker function dict-tolerant,
-    matching the pattern other backend tools use.
+    """Run ASE calculations using specified input parameters.
 
     Parameters
     ----------
-    params : ASEInputSchema or dict
-        Input parameters for the ASE calculation.
+    params : ASEInputSchema
+        Input parameters for the ASE calculation
 
     Returns
     -------
     dict
-        Calculation result (status, energies, paths, ...).
-    """
-    import platform
+        Output containing calculation status
 
+    Raises
+    ------
+    ValueError
+        If the calculator is not supported or if the calculation fails
+    """
+    import io
+    from contextlib import redirect_stdout
+
+    # On a backend worker, params arrives as a dict (the framework's
+    # to_picklable converts the pydantic arg before pickling); rebuild it.
     if isinstance(params, dict):
         params = ASEInputSchema(**params)
-    result = run_ase_core(params)
-    # Stamp the worker's node so callers can see which host actually ran the
-    # task -- the most direct proof of cross-node placement (the result comes
-    # back labeled by the node that computed it).
-    if isinstance(result, dict):
-        result["worker_hostname"] = platform.node()
-    return result
+    f = io.StringIO()
+    with redirect_stdout(f):
+        return run_ase_core(params)
 
 
 # ── Lightweight in-process tools (no backend involvement) ──────────────
