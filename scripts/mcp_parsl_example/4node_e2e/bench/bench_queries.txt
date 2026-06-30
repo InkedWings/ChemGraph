@@ -1,0 +1,84 @@
+# ChemGraph compute-bound benchmark workload (Exp C1) -- full 42-query set.
+#
+# Format: id <TAB> workflow <TAB> recursion_limit <TAB> query
+# Comment lines (#) and blank lines are ignored by the runner.
+#
+# Source: chemgraph_14_experiment_queries.md (14 experiments x 3 samples = 42).
+# All 42 run on this MCP+Parsl deployment:
+#   - Exp8 (NWChem B3LYP/STO-3G): enabled via the conda-forge nwchem prefix at
+#     /lus/eagle/projects/ChemGraph/zhijing/venvs/nwchem, exposed to Parsl workers
+#     through CHEMGRAPH_WORKER_INIT (PATH + NWCHEM_BASIS_LIBRARY + thread pins).
+#   - Exp14 (reaction enthalpy): runs as -w multi_agent; the CLI passes the MCP
+#     tools as executor_tools, so run_ase still executes on the Parsl pool.
+# Reaction experiments (Exp12, Exp13, Exp14) use recursion_limit 100 like the
+# existing in-process harness; everything else uses 20.
+
+# ---- Exp1: molecule name -> SMILES (lightweight) ----
+Exp1_S1	single_agent_mcp	20	Provide the SMILES string corresponding to this molecule: 9-[(2,6-dichlorophenyl)methyl]-N-(furan-2-ylmethyl)purin-6-amine
+Exp1_S2	single_agent_mcp	20	Provide the SMILES string corresponding to this molecule: bis(2-hydroxyphenyl)phosphinic acid
+Exp1_S3	single_agent_mcp	20	Provide the SMILES string corresponding to this molecule: N-[3-(2-ethylsulfonyl-3-phenyl-3,4-dihydropyrazol-5-yl)phenyl]methanesulfonamide
+
+# ---- Exp2: molecule name -> XYZ coordinates ----
+Exp2_S1	single_agent_mcp	20	Provide the XYZ coordinates corresponding to this molecule: fluoranthen-1-ylmethanol
+Exp2_S2	single_agent_mcp	20	Provide the XYZ coordinates corresponding to this molecule: 1-benzyl-4,6-dimethyl-2-oxopyridine-3-carbonitrile
+Exp2_S3	single_agent_mcp	20	Provide the XYZ coordinates corresponding to this molecule: 2-(2-ethoxyphenoxy)-N-(5-methyl-1,3,4-thiadiazol-2-yl)acetamide
+
+# ---- Exp3: molecule name geometry opt with UMA ----
+Exp3_S1	single_agent_mcp	20	Perform geometry optimization for a molecule Hydrogen using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu.
+Exp3_S2	single_agent_mcp	20	Perform geometry optimization for a molecule Nitrogen using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu.
+Exp3_S3	single_agent_mcp	20	Perform geometry optimization for a molecule Oxygen using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu.
+
+# ---- Exp4: molecule name vibrational frequency with UMA (heavy) ----
+Exp4_S1	single_agent_mcp	20	Run vibrational frequency calculation for a molecule 3-methyl-1,2,4-trithiolane using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu.
+Exp4_S2	single_agent_mcp	20	Run vibrational frequency calculation for a molecule 2-nitropropane using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu.
+Exp4_S3	single_agent_mcp	20	Run vibrational frequency calculation for a molecule 2-ethylsulfanyl-4,5-dihydro-1H-imidazole using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu.
+
+# ---- Exp5: molecule name Gibbs free energy with GFN2-xTB (heavy) ----
+Exp5_S1	single_agent_mcp	20	Calculate the Gibbs free energy of a molecule 2-(7-methoxy-1-benzofuran-3-yl)acetic acid using GFN2-xTB at a temperature of 800K
+Exp5_S2	single_agent_mcp	20	Calculate the Gibbs free energy of a molecule 4-[(2-nitropyridin-3-yl)oxymethyl]benzonitrile using GFN2-xTB at a temperature of 800K
+Exp5_S3	single_agent_mcp	20	Calculate the Gibbs free energy of a molecule N-[(2-chlorophenyl)methyl]-1-pyridin-4-ylmethanamine using GFN2-xTB at a temperature of 800K
+
+# ---- Exp6: molecule name geometry opt + XYZ save with UMA ----
+Exp6_S1	single_agent_mcp	20	Perform geometry optimization for a molecule 2,3,3,3-tetrafluoropropanoic acid using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu. Save the optimized coordinate in an XYZ file.
+Exp6_S2	single_agent_mcp	20	Perform geometry optimization for a molecule 2-(5-chloropyridin-2-yl)-1H-quinolin-4-one using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu. Save the optimized coordinate in an XYZ file.
+Exp6_S3	single_agent_mcp	20	Perform geometry optimization for a molecule 3-(4-methylphenyl)-5-pyridin-4-yl-1,2,4-oxadiazole using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu. Save the optimized coordinate in an XYZ file.
+
+# ---- Exp7: SMILES -> XYZ coordinates ----
+Exp7_S1	single_agent_mcp	20	Provide the XYZ coordinates corresponding to this SMILES string: C1=CC=C(C=C1)NNC(=O)C2=NC3=CC=CC=C3C=C2
+Exp7_S2	single_agent_mcp	20	Provide the XYZ coordinates corresponding to this SMILES string: CCCC1=C(C(=O)OC1=C)Br
+Exp7_S3	single_agent_mcp	20	Provide the XYZ coordinates corresponding to this SMILES string: CCCC(=O)NC1=NC2=C(C(=C1)C)C(=O)OC3=CC=CC=C32
+
+# ---- Exp8: SMILES geometry opt with NWChem (B3LYP/STO-3G) ----
+Exp8_S1	single_agent_mcp	20	Perform geometry optimization for this SMILES string [H][H] using NWChem, B3LYP and sto-3g
+Exp8_S2	single_agent_mcp	20	Perform geometry optimization for this SMILES string N#N using NWChem, B3LYP and sto-3g
+Exp8_S3	single_agent_mcp	20	Perform geometry optimization for this SMILES string O=O using NWChem, B3LYP and sto-3g
+
+# ---- Exp9: SMILES vibrational frequency with UMA (heavy) ----
+Exp9_S1	single_agent_mcp	20	Run vibrational frequency calculation for this SMILES string C1=CN=CC=C1C#N using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu.
+Exp9_S2	single_agent_mcp	20	Run vibrational frequency calculation for this SMILES string C1=C(C(=C(O1)CCl)Cl)CCl using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu.
+Exp9_S3	single_agent_mcp	20	Run vibrational frequency calculation for this SMILES string C1(=O)NNC(=O)NN1 using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu.
+
+# ---- Exp10: SMILES Gibbs free energy with UMA (heavy) ----
+Exp10_S1	single_agent_mcp	20	Calculate the Gibbs free energy of this SMILES string C1=CC=C2C(=C1)C(=NS2(=O)=O)OC3=CC=CC=C3Cl using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu at T=800K.
+Exp10_S2	single_agent_mcp	20	Calculate the Gibbs free energy of this SMILES string C1=CC=C(C=C1)N=[N+](C2=CC=CC=C2)[O-] using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu at T=800K.
+Exp10_S3	single_agent_mcp	20	Calculate the Gibbs free energy of this SMILES string C1=CC=C(C(=C1)NS(=O)(=O)C2=CC(=C(C=C2)Cl)N)F using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu at T=800K.
+
+# ---- Exp11: SMILES geometry opt + XYZ save with UMA ----
+Exp11_S1	single_agent_mcp	20	Perform geometry optimization for this SMILES string CN1C2=C(C(=O)NC1=O)N(C(=S)N2)CCOC using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu. Save the optimized coordinate in an XYZ file.
+Exp11_S2	single_agent_mcp	20	Perform geometry optimization for this SMILES string CC1=C(C=C(C=C1Cl)[N+](=O)[O-])Cl using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu. Save the optimized coordinate in an XYZ file.
+Exp11_S3	single_agent_mcp	20	Perform geometry optimization for this SMILES string C1CC(C1)(C2=CC=CC3=CC=CC=C32)O using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu. Save the optimized coordinate in an XYZ file.
+
+# ---- Exp12: reaction enthalpy with GFN2-xTB (single-agent, decomposition) ----
+Exp12_S1	single_agent_mcp	100	You are given a chemical reaction: 1 (Methane) + 2 (Oxygen) -> 1 (Carbon dioxide) + 2 (Water). Calculate the enthalpy for this reaction using GFN2-xTB at 400K.
+Exp12_S2	single_agent_mcp	100	You are given a chemical reaction: 1 (Nitrogen gas) + 3 (Hydrogen gas) -> 2 (Ammonia). Calculate the enthalpy for this reaction using GFN2-xTB at 400K.
+Exp12_S3	single_agent_mcp	100	You are given a chemical reaction: 1 (Carbon monoxide) + 1 (Water) -> 1 (Carbon dioxide) + 1 (Hydrogen gas). Calculate the enthalpy for this reaction using GFN2-xTB at 400K.
+
+# ---- Exp13: reaction Gibbs free energy with UMA (single-agent, decomposition) ----
+Exp13_S1	single_agent_mcp	100	What is the Gibbs free energy of reaction for 1 (Methane) + 2 (Oxygen) -> 1 (Carbon dioxide) + 2 (Water) using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu at 500K?
+Exp13_S2	single_agent_mcp	100	What is the Gibbs free energy of reaction for 1 (Nitrogen gas) + 3 (Hydrogen gas) -> 2 (Ammonia) using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu at 500K?
+Exp13_S3	single_agent_mcp	100	What is the Gibbs free energy of reaction for 1 (Carbon monoxide) + 1 (Water) -> 1 (Carbon dioxide) + 1 (Hydrogen gas) using FAIRChem calculator with task_name omol, model_name uma-s-1p1, device cpu at 500K?
+
+# ---- Exp14: reaction enthalpy with GFN2-xTB (MULTI-AGENT workflow) ----
+Exp14_S1	multi_agent	100	You are given a chemical reaction: 1 (Methane) + 2 (Oxygen) -> 1 (Carbon dioxide) + 2 (Water). Calculate the enthalpy for this reaction using GFN2-xTB at 400K.
+Exp14_S2	multi_agent	100	You are given a chemical reaction: 1 (Nitrogen gas) + 3 (Hydrogen gas) -> 2 (Ammonia). Calculate the enthalpy for this reaction using GFN2-xTB at 400K.
+Exp14_S3	multi_agent	100	You are given a chemical reaction: 1 (Carbon monoxide) + 1 (Water) -> 1 (Carbon dioxide) + 1 (Hydrogen gas). Calculate the enthalpy for this reaction using GFN2-xTB at 400K.

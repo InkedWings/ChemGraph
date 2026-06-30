@@ -42,12 +42,41 @@ e2e_activate() {
     source "$VENV/bin/activate"
 }
 
+# ---- PBS env reconstruction ------------------------------------------------
+# PBS_NODEFILE is a per-process env var: it lives in the qsub -I process tree,
+# NOT node-wide. A fresh `ssh <head>` session does NOT inherit it. But PBS keeps
+# the job's nodefile on disk at /var/spool/pbs/aux/<jobid>, so we can rebuild
+# PBS_NODEFILE/PBS_JOBID from the user's single running job. This lets every
+# stage run from any ssh session on the head node, not only the qsub -I shell.
+e2e_ensure_pbs_env() {
+    [ -n "${PBS_NODEFILE:-}" ] && [ -f "${PBS_NODEFILE:-}" ] && return 0
+    local aux=/var/spool/pbs/aux jobfile=""
+    # Prefer the jobid qstat reports as Running for this user; else newest aux file.
+    local jid
+    jid="$(qstat -u "$USER" 2>/dev/null | awk '$10=="R"{print $1}' | head -1 | cut -d. -f1)"
+    if [ -n "$jid" ]; then
+        jobfile="$(ls -1 "$aux"/${jid}.* 2>/dev/null | head -1)"
+    fi
+    [ -z "$jobfile" ] && jobfile="$(ls -1t "$aux"/*.polaris-pbs* 2>/dev/null | head -1)"
+    if [ -n "$jobfile" ] && [ -f "$jobfile" ]; then
+        export PBS_NODEFILE="$jobfile"
+        export PBS_JOBID="${PBS_JOBID:-$(basename "$jobfile")}"
+        echo "  (rebuilt PBS_NODEFILE from $jobfile)" >&2
+        return 0
+    fi
+    return 1
+}
+
 # ---- node-role resolution --------------------------------------------------
 # Echoes "HEAD B C D ..." (short names, unique, in PBS_NODEFILE order).
 # HEAD = first, B = second, C..D = the rest.
 e2e_resolve_nodes() {
     if [ -z "${PBS_NODEFILE:-}" ] || [ ! -f "${PBS_NODEFILE:-}" ]; then
-        echo "ERROR: PBS_NODEFILE not set/found. Run inside the qsub -I shell." >&2
+        e2e_ensure_pbs_env || true
+    fi
+    if [ -z "${PBS_NODEFILE:-}" ] || [ ! -f "${PBS_NODEFILE:-}" ]; then
+        echo "ERROR: PBS_NODEFILE not set and could not be rebuilt from /var/spool/pbs/aux." >&2
+        echo "       Run on the head node of a running PBS job." >&2
         return 1
     fi
     # Unique nodes preserving first-seen order; strip domain to short names.

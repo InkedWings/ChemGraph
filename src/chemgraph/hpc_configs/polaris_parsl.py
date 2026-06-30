@@ -51,16 +51,36 @@ def get_polaris_config(
             os.getenv("CHEMGRAPH_PARSL_MAX_WORKERS_PER_NODE", "4")
         )
 
-    # Polaris node = 64 logical CPUs (0-63). Split into contiguous blocks,
-    # one per worker, so each worker is pinned to an exclusive core range.
-    # Default 4 workers -> 16 logical CPUs each: 0-15 / 16-31 / 32-47 / 48-63.
-    _n_cpus = 64
-    _block = _n_cpus // max_workers_per_node
-    _ranges = [
-        f"{i * _block}-{(i + 1) * _block - 1}"
-        for i in range(max_workers_per_node)
-    ]
-    cpu_affinity = "list:" + ":".join(_ranges)
+    # Polaris CPU node = AMD EPYC 7543P: 32 physical cores (logical 0-31),
+    # each with an SMT sibling at +32 (logical 32-63), across 4 NUMA nodes of
+    # 8 physical cores each (NUMA0=0-7, NUMA1=8-15, NUMA2=16-23, NUMA3=24-31).
+    #
+    # Pin each worker to a CONTIGUOUS block of physical cores PLUS their SMT
+    # siblings, so a worker owns whole physical cores (never another worker's
+    # hyperthread) and stays NUMA-local. This keeps per-worker CPU utilization
+    # and timing clean -- the old contiguous-logical split (0-15/16-31/32-47/
+    # 48-63) put two workers on the SMT siblings of the other two and split
+    # workers across NUMA boundaries. With the default 4 workers each block is
+    # one whole NUMA node:
+    #   list:0-7,32-39 : 8-15,40-47 : 16-23,48-55 : 24-31,56-63
+    _phys = 32          # physical cores per Polaris CPU node
+    _smt_offset = 32    # SMT sibling of physical core c is logical c + 32
+    if _phys % max_workers_per_node == 0:
+        _pblock = _phys // max_workers_per_node
+        _ranges = []
+        for i in range(max_workers_per_node):
+            lo, hi = i * _pblock, (i + 1) * _pblock - 1
+            _ranges.append(f"{lo}-{hi},{lo + _smt_offset}-{hi + _smt_offset}")
+        cpu_affinity = "list:" + ":".join(_ranges)
+    else:
+        # Worker counts that don't divide 32 evenly: fall back to contiguous
+        # logical blocks over all 64 logical CPUs.
+        _block = (_phys * 2) // max_workers_per_node
+        _ranges = [
+            f"{i * _block}-{(i + 1) * _block - 1}"
+            for i in range(max_workers_per_node)
+        ]
+        cpu_affinity = "list:" + ":".join(_ranges)
 
     # Get the number of nodes from the PBS environment
     node_file = os.getenv("PBS_NODEFILE")

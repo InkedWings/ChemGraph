@@ -25,6 +25,9 @@ mkdir -p "$STATE_DIR" "$LOG_DIR"
 echo "==================== Stage 2: start MCP server on HEAD ===================="
 
 # ---- node context (resolve from the REAL PBS_NODEFILE before overriding) ----
+# Rebuild PBS_NODEFILE in-process if this is a fresh ssh session (not qsub -I).
+# Verified: ssh-to-head + rebuilt PBS_NODEFILE drives cross-node PALS mpiexec fine.
+e2e_ensure_pbs_env || { echo "  ERROR: no running PBS job / nodefile found." >&2; exit 1; }
 if ! e2e_resolve_nodes >/dev/null; then
     exit 1
 fi
@@ -37,8 +40,9 @@ echo "  HEAD node        : $HEAD_NODE"
 echo "  compute (C..D)   : ${COMPUTE_ARR[*]}"
 
 if [ "$THIS_NODE" != "$HEAD_NODE" ]; then
-    echo "  ERROR: not on HEAD node. Cross-node Parsl needs the qsub -I shell on $HEAD_NODE."
-    echo "  (ssh sessions have an empty PBS_NODEFILE and cannot drive mpiexec.)"
+    echo "  ERROR: not on HEAD node ($HEAD_NODE). Must run on the head node so PALS"
+    echo "  mpiexec can place Parsl workers cross-node. (An ssh session works as long"
+    echo "  as it is on the head node and PBS_NODEFILE was rebuilt -- done above.)"
     exit 1
 fi
 if [ "${#COMPUTE_ARR[@]}" -lt 1 ]; then
@@ -59,7 +63,9 @@ export CHEMGRAPH_EXECUTION_BACKEND=parsl
 export COMPUTE_SYSTEM=polaris
 # Explicit worker_init so workers on C+D get a working interpreter (module load
 # + venv activate), not just a bare venv activate.
-export CHEMGRAPH_WORKER_INIT="module use /soft/modulefiles; module load conda; conda activate base; source $VENV/bin/activate; export TMPDIR=/tmp"
+# Honor a pre-set CHEMGRAPH_WORKER_INIT (the benchmark sweep injects NWChem PATH +
+# NWCHEM_BASIS_LIBRARY + OMP/OPENBLAS thread pins here); else use the default.
+export CHEMGRAPH_WORKER_INIT="${CHEMGRAPH_WORKER_INIT:-module use /soft/modulefiles; module load conda; conda activate base; source $VENV/bin/activate; export TMPDIR=/tmp}"
 export CHEMGRAPH_LOG_DIR="$LOG_DIR"
 # Override PBS_NODEFILE -> Parsl/mpiexec uses ONLY C+D.
 export PBS_NODEFILE="$COMPUTE_NODEFILE"
@@ -118,5 +124,10 @@ fi
 
 echo "  MCP server is UP at http://127.0.0.1:$MCP_PORT/mcp/"
 echo "  (Parsl workers on C+D will lazy-start on the first run_ase in Stage 3.)"
+
+# Sentinel: record the pool size this server was launched with, so the benchmark
+# sweep can assert a cell runs against an MCP started for the matching W (the
+# pool size is baked at startup and cannot change without a restart).
+echo "${CHEMGRAPH_PARSL_MAX_WORKERS_PER_NODE:-4}" > "$STATE_DIR/mcp_workers_per_node"
 echo "==================== Stage 2 done ===================="
 echo "Next: bash e2e_3_run_agent.sh"
