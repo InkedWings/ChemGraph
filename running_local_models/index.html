@@ -271,6 +271,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../codex_subscription/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Experimental Codex Support
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../example_usage/" class="md-tabs__link">
         
   
@@ -601,6 +620,33 @@
     
   
     Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codex_subscription/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experimental Codex Support
   
 
     
@@ -1213,9 +1259,9 @@ For specific hardware acceleration (e.g., CUDA, ROCm), refer to the <a href="htt
 <li><strong>Hugging Face Account and Token</strong>: Ensure you have a Hugging Face account and have generated an access token with <code>read</code> permissions. You can find this in your Hugging Face account settings under "Access Tokens".</li>
 <li><strong>Accept Model License</strong>: Navigate to the Hugging Face page of the specific model you want to use (e.g., <code>meta-llama/Meta-Llama-3-8B-Instruct</code>) and accept its license/terms if prompted.</li>
 <li><strong>Environment Variables</strong>: Before running the vLLM server, set the following environment variables in your terminal session or environment configuration (e.g., <code>.bashrc</code>, <code>.zshrc</code>):
-    <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HF_TOKEN</span><span class="o">=</span><span class="s2">&quot;your_hugging_face_token_here&quot;</span>
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HF_TOKEN</span><span class="o">=</span><span class="s2">"your_hugging_face_token_here"</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Optional: Specify a directory for Hugging Face to download models and cache.</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># export HF_HOME=&quot;/path/to/your/huggingface_cache_directory&quot;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># export HF_HOME="/path/to/your/huggingface_cache_directory"</span>
 </span></code></pre></div>
     vLLM will use these environment variables to authenticate with Hugging Face and download the model weights.</li>
 </ol>

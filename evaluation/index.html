@@ -271,6 +271,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../codex_subscription/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Experimental Codex Support
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../example_usage/" class="md-tabs__link">
         
   
@@ -601,6 +620,33 @@
     
   
     Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codex_subscription/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experimental Codex Support
   
 
     
@@ -1894,20 +1940,20 @@
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">chemgraph.eval</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelBenchmarkRunner</span><span class="p">,</span> <span class="n">BenchmarkConfig</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">config</span> <span class="o">=</span> <span class="n">BenchmarkConfig</span><span class="p">(</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">models</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">],</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">judge_model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">models</span><span class="o">=</span><span class="p">[</span><span class="s2">"gpt-4o-mini"</span><span class="p">,</span> <span class="s2">"gemini-2.5-flash"</span><span class="p">],</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">judge_model</span><span class="o">=</span><span class="s2">"gpt-4o"</span><span class="p">,</span>
 </span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="c1"># dataset defaults to bundled 14-query dataset</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="c1"># workflow_types defaults to [&quot;single_agent&quot;]</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="c1"># workflow_types defaults to ["single_agent"]</span>
 </span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">)</span>
 </span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="n">runner</span> <span class="o">=</span> <span class="n">ModelBenchmarkRunner</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 </span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="n">results</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">runner</span><span class="o">.</span><span class="n">run_all</span><span class="p">())</span>
 </span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="n">runner</span><span class="o">.</span><span class="n">report</span><span class="p">()</span>  <span class="c1"># generates JSON + Markdown + console output</span>
 </span></code></pre></div>
 <p>You can also control report format:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">runner</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>      <span class="c1"># JSON only</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">runner</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;markdown&quot;</span><span class="p">)</span>  <span class="c1"># Markdown only</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">runner</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;console&quot;</span><span class="p">)</span>   <span class="c1"># Console table only</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">runner</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>       <span class="c1"># All formats (default)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">runner</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">"json"</span><span class="p">)</span>      <span class="c1"># JSON only</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">runner</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">"markdown"</span><span class="p">)</span>  <span class="c1"># Markdown only</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">runner</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">"console"</span><span class="p">)</span>   <span class="c1"># Console table only</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">runner</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">"all"</span><span class="p">)</span>       <span class="c1"># All formats (default)</span>
 </span></code></pre></div>
 <h2 id="cli-reference">CLI Reference</h2>
 <table>
@@ -1981,39 +2027,39 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Valid workflow types</strong>: <code>single_agent</code>, <code>multi_agent</code>, <code>single_agent_mcp</code></p>
+<p><strong>Valid workflow types</strong>: <code>single_agent</code>, <code>multi_agent</code></p>
 <h2 id="configuration">Configuration</h2>
 <h3 id="benchmarkconfig">BenchmarkConfig</h3>
 <p>The <code>BenchmarkConfig</code> Pydantic model holds all settings for a benchmark run:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">chemgraph.eval</span><span class="w"> </span><span class="kn">import</span> <span class="n">BenchmarkConfig</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">BenchmarkConfig</span><span class="p">(</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">models</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">],</span>           <span class="c1"># Required: models to evaluate</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">judge_model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span>             <span class="c1"># Required: judge model</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">workflow_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;single_agent&quot;</span><span class="p">],</span>   <span class="c1"># Default: [&quot;single_agent&quot;]</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;path/to/gt.json&quot;</span><span class="p">,</span>        <span class="c1"># Default: bundled dataset</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;eval_results&quot;</span><span class="p">,</span>        <span class="c1"># Default: &quot;eval_results&quot;</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">models</span><span class="o">=</span><span class="p">[</span><span class="s2">"gpt-4o-mini"</span><span class="p">],</span>           <span class="c1"># Required: models to evaluate</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">judge_model</span><span class="o">=</span><span class="s2">"gpt-4o"</span><span class="p">,</span>             <span class="c1"># Required: judge model</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">workflow_types</span><span class="o">=</span><span class="p">[</span><span class="s2">"single_agent"</span><span class="p">],</span>   <span class="c1"># Default: ["single_agent"]</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">dataset</span><span class="o">=</span><span class="s2">"path/to/gt.json"</span><span class="p">,</span>        <span class="c1"># Default: bundled dataset</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">"eval_results"</span><span class="p">,</span>        <span class="c1"># Default: "eval_results"</span>
 </span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="n">structured_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>           <span class="c1"># Default: True</span>
 </span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="n">recursion_limit</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>               <span class="c1"># Default: 50</span>
 </span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="n">max_queries</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>                    <span class="c1"># Default: 0 (all queries)</span>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;config.toml&quot;</span><span class="p">,</span>        <span class="c1"># Default: None</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="n">config_file</span><span class="o">=</span><span class="s2">"config.toml"</span><span class="p">,</span>        <span class="c1"># Default: None</span>
 </span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="toml-profiles">TOML Profiles</h3>
 <p>Define reusable profiles in your <code>config.toml</code>:</p>
 <div class="language-toml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">[eval]</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">default_profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;standard&quot;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">default_profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"standard"</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">[eval.profiles.standard]</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">judge_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;gpt-4o&quot;</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="n">workflow_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;single_agent&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;multi_agent&quot;</span><span class="p">]</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">judge_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"gpt-4o"</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="n">workflow_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"single_agent"</span><span class="p">,</span><span class="w"> </span><span class="s2">"multi_agent"</span><span class="p">]</span>
 </span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">recursion_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span>
 </span></code></pre></div>
 <p>Profiles are loaded via <code>BenchmarkConfig.from_profile()</code> or the <code>--profile</code> CLI flag. CLI arguments always override profile values.</p>
 <p>When <code>--config</code> is provided without <code>--profile</code>, the <code>[eval] default_profile</code> is used automatically if defined.</p>
 <p>List available profiles:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">chemgraph.eval</span><span class="w"> </span><span class="kn">import</span> <span class="n">BenchmarkConfig</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">profiles</span> <span class="o">=</span> <span class="n">BenchmarkConfig</span><span class="o">.</span><span class="n">list_profiles</span><span class="p">(</span><span class="s2">&quot;config.toml&quot;</span><span class="p">)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">profiles</span> <span class="o">=</span> <span class="n">BenchmarkConfig</span><span class="o">.</span><span class="n">list_profiles</span><span class="p">(</span><span class="s2">"config.toml"</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="llm-judge">LLM Judge</h2>
 <p>The judge is implemented in <code>chemgraph.eval.llm_judge</code> and uses the following evaluation rubric:</p>
@@ -2038,23 +2084,23 @@
 <h3 id="input-format">Input Format</h3>
 <p>The input file (<code>input_data.json</code>) contains molecules and reactions:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="nt">&quot;molecules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="nt">"molecules"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">        </span><span class="p">{</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;water&quot;</span><span class="p">,</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">            </span><span class="nt">&quot;number_of_atoms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">            </span><span class="nt">&quot;smiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;O&quot;</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"water"</span><span class="p">,</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">            </span><span class="nt">"number_of_atoms"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">            </span><span class="nt">"smiles"</span><span class="p">:</span><span class="w"> </span><span class="s2">"O"</span>
 </span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span><span class="p">],</span>
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="nt">&quot;reactions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="nt">"reactions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 </span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">        </span><span class="p">{</span>
-</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">            </span><span class="nt">&quot;reaction_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Methane Combustion&quot;</span><span class="p">,</span>
-</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">            </span><span class="nt">&quot;reactants&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">                </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Methane&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;smiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;C&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;coefficient&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">},</span>
-</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">                </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Oxygen&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;smiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;O=O&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;coefficient&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">}</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">            </span><span class="nt">"reaction_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Methane Combustion"</span><span class="p">,</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">            </span><span class="nt">"reactants"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">                </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Methane"</span><span class="p">,</span><span class="w"> </span><span class="nt">"smiles"</span><span class="p">:</span><span class="w"> </span><span class="s2">"C"</span><span class="p">,</span><span class="w"> </span><span class="nt">"coefficient"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">},</span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">                </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Oxygen"</span><span class="p">,</span><span class="w"> </span><span class="nt">"smiles"</span><span class="p">:</span><span class="w"> </span><span class="s2">"O=O"</span><span class="p">,</span><span class="w"> </span><span class="nt">"coefficient"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">}</span>
 </span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">            </span><span class="p">],</span>
-</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">            </span><span class="nt">&quot;products&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">                </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Carbon dioxide&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;smiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;O=C=O&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;coefficient&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">},</span>
-</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">                </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Water&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;smiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;O&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;coefficient&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">}</span>
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">            </span><span class="nt">"products"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">                </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Carbon dioxide"</span><span class="p">,</span><span class="w"> </span><span class="nt">"smiles"</span><span class="p">:</span><span class="w"> </span><span class="s2">"O=C=O"</span><span class="p">,</span><span class="w"> </span><span class="nt">"coefficient"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">},</span>
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">                </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Water"</span><span class="p">,</span><span class="w"> </span><span class="nt">"smiles"</span><span class="p">:</span><span class="w"> </span><span class="s2">"O"</span><span class="p">,</span><span class="w"> </span><span class="nt">"coefficient"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">}</span>
 </span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">            </span><span class="p">]</span>
 </span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">    </span><span class="p">]</span>
@@ -2075,18 +2121,18 @@
 <h3 id="output-format">Output Format</h3>
 <p>Each entry in the generated <code>ground_truth.json</code> has this structure:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="p">{</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Calculate the geometry optimization of sulfur dioxide using mace_mp&quot;</span><span class="p">,</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">        </span><span class="nt">&quot;tool_calls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">            </span><span class="p">{</span><span class="nt">&quot;molecule_name_to_smiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sulfur dioxide&quot;</span><span class="p">}},</span>
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">            </span><span class="p">{</span><span class="nt">&quot;smiles_to_coordinate_file&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;smiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;O=S=O&quot;</span><span class="p">}},</span>
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">            </span><span class="p">{</span><span class="nt">&quot;run_ase&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;input_structure_file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;calculator_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mace_mp&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;driver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;opt&quot;</span><span class="p">}}</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5"</span><span class="p">,</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Calculate the geometry optimization of sulfur dioxide using mace_mp"</span><span class="p">,</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="nt">"answer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">        </span><span class="nt">"tool_calls"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">            </span><span class="p">{</span><span class="nt">"molecule_name_to_smiles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sulfur dioxide"</span><span class="p">}},</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">            </span><span class="p">{</span><span class="nt">"smiles_to_coordinate_file"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"smiles"</span><span class="p">:</span><span class="w"> </span><span class="s2">"O=S=O"</span><span class="p">}},</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">            </span><span class="p">{</span><span class="nt">"run_ase"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"input_structure_file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"calculator_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mace_mp"</span><span class="p">,</span><span class="w"> </span><span class="nt">"driver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"opt"</span><span class="p">}}</span>
 </span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">        </span><span class="p">],</span>
-</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">        </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">            </span><span class="nt">&quot;energy&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-14.523</span><span class="p">,</span>
-</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">            </span><span class="nt">&quot;positions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="err">...</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="p">],</span>
-</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">            </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">        </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">            </span><span class="nt">"energy"</span><span class="p">:</span><span class="w"> </span><span class="mf">-14.523</span><span class="p">,</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">            </span><span class="nt">"positions"</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="err">...</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="p">],</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">            </span><span class="nt">"..."</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span>
 </span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="p">}</span>
@@ -2096,20 +2142,20 @@
 <p><strong>List format</strong> (recommended):</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">[</span>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">        </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Your natural language query&quot;</span><span class="p">,</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">        </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">            </span><span class="nt">&quot;tool_calls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">],</span>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">            </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">        </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Your natural language query"</span><span class="p">,</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">        </span><span class="nt">"answer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">            </span><span class="nt">"tool_calls"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">],</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">            </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span>
 </span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="p">]</span>
 </span></code></pre></div>
 <p><strong>Legacy dict format</strong> (also supported):</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span><span class="nt">&quot;molecule_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">        </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Your query&quot;</span><span class="p">,</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">        </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span><span class="nt">"molecule_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">        </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Your query"</span><span class="p">,</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">        </span><span class="nt">"answer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span>
 </span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="p">}</span>
 </span></code></pre></div>

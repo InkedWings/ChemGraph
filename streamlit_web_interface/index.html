@@ -271,6 +271,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../codex_subscription/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Experimental Codex Support
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../example_usage/" class="md-tabs__link">
         
   
@@ -601,6 +620,33 @@
     
   
     Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codex_subscription/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experimental Codex Support
   
 
     
@@ -1191,12 +1237,12 @@
 </div>
 <h2 id="run-the-app">Run the app</h2>
 <p>Install ChemGraph, then set the provider credentials required by the model you plan to use:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span><span class="s2">&quot;...&quot;</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_API_KEY</span><span class="o">=</span><span class="s2">&quot;...&quot;</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GEMINI_API_KEY</span><span class="o">=</span><span class="s2">&quot;...&quot;</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GROQ_API_KEY</span><span class="o">=</span><span class="s2">&quot;...&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span><span class="s2">"..."</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_API_KEY</span><span class="o">=</span><span class="s2">"..."</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GEMINI_API_KEY</span><span class="o">=</span><span class="s2">"..."</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GROQ_API_KEY</span><span class="o">=</span><span class="s2">"..."</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># ALCF inference endpoints:</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ALCF_ACCESS_TOKEN</span><span class="o">=</span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ALCF_ACCESS_TOKEN</span><span class="o">=</span><span class="s2">"..."</span>
 </span></code></pre></div>
 <p>Launch:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>streamlit<span class="w"> </span>run<span class="w"> </span>src/ui/app.py
@@ -1230,7 +1276,7 @@
 </ul>
 <p>API keys entered in the UI are applied as process environment variables for the current Streamlit process and are not saved to <code>config.toml</code>. For shared deployments, prefer server-side environment variables.</p>
 <h2 id="sessions">Sessions</h2>
-<p>The main sidebar lists recent saved sessions. Loading a session rebuilds the visible conversation history from <code>~/.chemgraph/sessions.db</code>; deleting a session removes it from that database. A new chat clears the visible conversation and starts a new saved session on the next successful exchange.</p>
+<p>The main sidebar lists recent saved sessions. Loading a session rebuilds the visible conversation history from <code>~/.chemgraph/sessions.db</code>; it does not restore a durable CLI <code>main_agent</code> graph. Deleting a durable local main-agent session removes its LangGraph checkpoints before removing its readable transcript. A new chat clears the visible conversation and starts a new saved session on the next successful exchange.</p>
 <p>The UI uses the active saved configuration for model, workflow, thread, report generation, and human-supervision settings. To change these settings, use the Configuration page, save the configuration, then click <strong>Reload Config</strong> or <strong>Refresh Agents</strong> on the main page.</p>
 <h2 id="artifacts">Artifacts</h2>
 <p>The UI detects structures and reports from agent messages. For IR calculations, it looks in the run directory referenced by the result message for files such as <code>ir_spectrum_&lt;name&gt;.png</code>, <code>frequencies_&lt;name&gt;.csv</code>, and <code>&lt;name&gt;_vib.&lt;mode&gt;.traj</code>.</p>

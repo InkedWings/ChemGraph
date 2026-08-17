@@ -271,6 +271,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../codex_subscription/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Experimental Codex Support
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../example_usage/" class="md-tabs__link">
         
   
@@ -601,6 +620,33 @@
     
   
     Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codex_subscription/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experimental Codex Support
   
 
     
@@ -1395,7 +1441,7 @@
 <p>OpenCode spawns the MCP server as a local child process using stdio transport. The <code>{env:CHEMGRAPH_PYTHON}</code> variable in the config is resolved at startup, so different users (or the same user on different machines) can each point to their own ChemGraph installation without modifying the committed config.</p>
 <h2 id="notes-for-parsl-based-servers">Notes for Parsl-based servers</h2>
 <p>Install the Parsl optional dependency when using HPC-backed servers:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[parsl]&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[parsl]"</span>
 </span></code></pre></div>
 <p><code>graspa_mcp_parsl.py</code> and <code>xanes_mcp_parsl.py</code> load system-specific Parsl configuration through <code>COMPUTE_SYSTEM</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">COMPUTE_SYSTEM</span><span class="o">=</span>polaris<span class="w">  </span><span class="c1"># or aurora</span>
