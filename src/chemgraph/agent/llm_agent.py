@@ -235,6 +235,7 @@ class ChemGraph:
         on_event: Optional[EventCallback] = None,
         reasoning_effort: Optional[str] = None,
         checkpointer: BaseCheckpointSaver | None = None,
+        instrument_callbacks: Optional[List] = None,
     ):
         if enable_deepagent and workflow_type != "main_agent":
             raise ValueError(
@@ -370,6 +371,15 @@ class ChemGraph:
         except Exception as e:
             logger.error(f"Exception thrown when loading {model_name}: {str(e)}")
             raise e
+
+        # Attach evaluation instrumentation callbacks to the model instance.
+        # Set as a model field (not via ``with_config``) so the callbacks
+        # survive the ``llm.bind_tools(...)`` performed inside the graph nodes.
+        if instrument_callbacks:
+            try:
+                llm.callbacks = instrument_callbacks
+            except Exception:
+                pass
 
         prompts = prompts or PromptConfig()
 

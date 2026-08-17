@@ -9,12 +9,20 @@ import datetime
 import inspect
 import json
 import os
+import time
 import traceback
 from typing import Any, Dict, List
 
 from chemgraph.agent.llm_agent import ChemGraph
 from chemgraph.eval.config import BenchmarkConfig
 from chemgraph.eval.datasets import GroundTruthItem, load_dataset
+from chemgraph.eval.instrumentation import (
+    EvalInstrument,
+    aggregate_timing,
+    aggregate_tokens,
+    pop_calc_load,
+    reset_calc_load,
+)
 from chemgraph.eval.llm_judge import (
     aggregate_judge_results,
     judge_single_query,
@@ -208,6 +216,11 @@ class ModelBenchmarkRunner:
                             "raw": record.get("raw"),
                             "judge": record.get("judge"),
                             "structured_judge": record.get("structured_judge"),
+                            # Preserve instrumentation so combined --report runs
+                            # (which load every query from checkpoint via --resume)
+                            # still aggregate timing/token metrics.
+                            "timing": record.get("timing"),
+                            "token_usage": record.get("token_usage"),
                         }
                 except json.JSONDecodeError:
                     logger.warning(
@@ -284,6 +297,10 @@ class ModelBenchmarkRunner:
             # Build desired kwargs and filter to only those accepted by
             # the installed ChemGraph version, so the runner works even
             # against older releases that lack newer parameters.
+            # One instrumentation handler per (model, workflow): attached to
+            # the model for LLM events and reused across this pair's queries
+            # (reset before each query in _run_single_query).
+            instrument = EvalInstrument()
             desired_kwargs = {
                 "model_name": model_name,
                 "workflow_type": workflow_type,
@@ -294,6 +311,7 @@ class ModelBenchmarkRunner:
                 "base_url": base_url,
                 "argo_user": argo_user,
                 "log_dir": run_log_dir,
+                "instrument_callbacks": [instrument],
             }
             sig = inspect.signature(ChemGraph.__init__)
             valid_params = set(sig.parameters.keys()) - {"self"}
@@ -301,7 +319,11 @@ class ModelBenchmarkRunner:
                 k: v for k, v in desired_kwargs.items() if k in valid_params
             }
 
+            # Time agent/graph construction (the one-time "loading" cost for
+            # this model+workflow: model client + LangGraph compile).
+            _t_init = time.perf_counter()
             cg = ChemGraph(**filtered_kwargs)
+            agent_init_s = time.perf_counter() - _t_init
         except Exception as e:
             logger.error(f"Failed to initialise ChemGraph for {model_name}: {e}")
             return self._make_error_result(
@@ -312,6 +334,8 @@ class ModelBenchmarkRunner:
         raw_tool_calls: List[dict] = []
         per_query_judge_results: List[dict] = []
         per_query_structured_results: List[dict] = []
+        per_query_timing: List[dict] = []
+        per_query_tokens: List[dict] = []
 
         # Load checkpoint for resume, or clear stale data for a fresh run.
         checkpoint: Dict[str, dict] = {}
@@ -331,7 +355,7 @@ class ModelBenchmarkRunner:
                 )
             else:
                 query_result = await self._run_single_query(
-                    cg, item, idx, model_name, workflow_type
+                    cg, item, idx, model_name, workflow_type, instrument
                 )
                 # Checkpoint immediately after each query completes.
                 self._save_query_checkpoint(
@@ -343,6 +367,10 @@ class ModelBenchmarkRunner:
                 per_query_judge_results.append(query_result["judge"])
             if query_result.get("structured_judge") is not None:
                 per_query_structured_results.append(query_result["structured_judge"])
+            if query_result.get("timing") is not None:
+                per_query_timing.append(query_result["timing"])
+            if query_result.get("token_usage") is not None:
+                per_query_tokens.append(query_result["token_usage"])
 
         if n_skipped:
             logger.info(
@@ -367,6 +395,12 @@ class ModelBenchmarkRunner:
             result["structured_judge_aggregate"] = struct_agg
             result["structured_judge_details"] = per_query_structured_results
 
+        # Performance instrumentation: token usage + time breakdown.
+        result["timing_aggregate"] = aggregate_timing(per_query_timing, agent_init_s)
+        result["token_usage_aggregate"] = aggregate_tokens(per_query_tokens)
+        result["per_query_timing"] = per_query_timing
+        result["per_query_token_usage"] = per_query_tokens
+
         # Log summary.
         parts = [f"Completed eval {model_name}/{workflow_type}:"]
         if "judge_aggregate" in result:
@@ -381,6 +415,13 @@ class ModelBenchmarkRunner:
                 f"struct_judge={sagg['accuracy']:.1%} "
                 f"({sagg['n_correct']}/{sagg['n_queries']})"
             )
+        tagg = result["timing_aggregate"]
+        uagg = result["token_usage_aggregate"]
+        parts.append(
+            f"tokens={uagg['total_tokens']} "
+            f"(llm {tagg['llm_s']:.0f}s, tools {tagg['tool_s']:.0f}s, "
+            f"calc_load {tagg['calc_load_s']:.0f}s, init {tagg['agent_init_s']:.0f}s)"
+        )
         logger.info(" ".join(parts))
 
         return result
@@ -392,6 +433,7 @@ class ModelBenchmarkRunner:
         idx: int,
         model_name: str,
         workflow_type: str,
+        instrument: "EvalInstrument" = None,
     ) -> dict:
         """Execute and evaluate a single query.
 
@@ -415,8 +457,17 @@ class ModelBenchmarkRunner:
         dict
             Query result containing raw output and judge results.
         """
+        # Reset per-query instrumentation and attach the handler to the run
+        # config so the LangGraph ToolNode reports tool-execution timing.
+        if instrument is not None:
+            instrument.reset()
+        reset_calc_load()
+        config: Dict[str, Any] = {"configurable": {"thread_id": str(idx)}}
+        if instrument is not None:
+            config["callbacks"] = [instrument]
+
+        _t_agent = time.perf_counter()
         try:
-            config = {"configurable": {"thread_id": str(idx)}}
             state = await cg.run(item.query, config)
             llm_workflow = get_workflow_from_state(state)
             model_tool_calls = llm_workflow.get("tool_calls", [])
@@ -427,11 +478,15 @@ class ModelBenchmarkRunner:
             model_tool_calls = []
             model_result = f"ERROR: {e}"
             llm_workflow = {"tool_calls": [], "result": model_result}
+        agent_wall_s = time.perf_counter() - _t_agent
 
         result: Dict[str, Any] = {"raw": llm_workflow}
 
+        judge_s = 0.0
+
         # --- LLM judge ---
         if self.config.judge_type in ("llm", "both") and self._judge_llm is not None:
+            _tj = time.perf_counter()
             judge_result = await judge_single_query(
                 judge_llm=self._judge_llm,
                 query=item.query,
@@ -440,6 +495,7 @@ class ModelBenchmarkRunner:
                 expected_tool_calls=item.expected_tool_calls,
                 model_tool_calls=model_tool_calls,
             )
+            judge_s += time.perf_counter() - _tj
             judge_result["query_id"] = item.id
             judge_result["query"] = item.query
             judge_result["category"] = item.category
@@ -448,10 +504,12 @@ class ModelBenchmarkRunner:
         # --- Structured output judge ---
         if self.config.judge_type in ("structured", "both"):
             if item.expected_structured_output is not None:
+                _tj = time.perf_counter()
                 struct_result = judge_structured_output(
                     expected=item.expected_structured_output,
                     actual=model_result,
                 )
+                judge_s += time.perf_counter() - _tj
                 struct_result["query_id"] = item.id
                 struct_result["query"] = item.query
                 struct_result["category"] = item.category
@@ -461,6 +519,45 @@ class ModelBenchmarkRunner:
                     f"Query {idx}: no expected_structured_output, "
                     f"skipping structured judge"
                 )
+
+        # --- Per-query performance metrics ---
+        # The buckets sum to agent_wall_s:
+        #   llm_s + tool_compute_s + calc_load_s + other_s == agent_wall_s
+        # where tool_s == tool_compute_s + calc_load_s (calc load happens
+        # *inside* run_ase). judge_s is separate (runs after the agent).
+        snap = (
+            instrument.snapshot()
+            if instrument is not None
+            else {"llm": {}, "tools": {}, "tool_time_s": 0.0, "tool_calls": 0}
+        )
+        calc = pop_calc_load()
+        llm = snap.get("llm", {})
+        llm_s = float(llm.get("time_s", 0.0) or 0.0)
+        tool_s = float(snap.get("tool_time_s", 0.0) or 0.0)
+        calc_load_s = float(calc.get("calc_load_s", 0.0) or 0.0)
+        result["timing"] = {
+            "query_id": item.id,
+            "category": item.category,
+            "agent_wall_s": round(agent_wall_s, 4),
+            "llm_s": round(llm_s, 4),
+            "llm_calls": llm.get("calls", 0),
+            "tool_s": round(tool_s, 4),
+            "tool_compute_s": round(max(tool_s - calc_load_s, 0.0), 4),
+            "calc_load_s": round(calc_load_s, 4),
+            "calc_load_count": calc.get("calc_load_count", 0),
+            "judge_s": round(judge_s, 4),
+            "other_s": round(max(agent_wall_s - llm_s - tool_s, 0.0), 4),
+            "per_tool": snap.get("tools", {}),
+        }
+        result["token_usage"] = {
+            "query_id": item.id,
+            "category": item.category,
+            "prompt_tokens": llm.get("prompt_tokens", 0),
+            "completion_tokens": llm.get("completion_tokens", 0),
+            "total_tokens": llm.get("total_tokens", 0),
+            "cached_tokens": llm.get("cached_tokens", 0),
+            "llm_calls": llm.get("calls", 0),
+        }
 
         return result
 
@@ -503,11 +600,18 @@ class ModelBenchmarkRunner:
 
                 # Write per-model detail file immediately so partial
                 # results survive if a later model fails.
+                per_query_perf = [
+                    {"timing": t, "token_usage": u}
+                    for t, u in zip(
+                        result.get("per_query_timing", []),
+                        result.get("per_query_token_usage", []),
+                    )
+                ]
                 write_model_detail(
                     model_name=model_name,
                     workflow_type=workflow_type,
                     raw_tool_calls=result["raw_tool_calls"],
-                    per_query_results=[],
+                    per_query_results=per_query_perf,
                     output_dir=self.config.output_dir,
                     judge_results=result.get("judge_details"),
                     structured_judge_results=result.get("structured_judge_details"),

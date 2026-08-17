@@ -165,6 +165,39 @@ def generate_markdown_report(
 
             lines.append("")
 
+        # Performance: token usage + time breakdown.
+        has_perf = any(
+            model_data.get(workflow, {}).get("timing_aggregate")
+            for model_data in results.values()
+        )
+        if has_perf:
+            lines.append("### Performance (tokens & time breakdown)")
+            lines.append("")
+            lines.append(
+                "| Model | Total tokens | Cached | Avg tok/query "
+                "| LLM s | Tool s | Calc-load s | Init s | Agent wall s |"
+            )
+            lines.append("|---|---|---|---|---|---|---|---|---|")
+            for model_name, model_data in results.items():
+                if workflow not in model_data:
+                    continue
+                tagg = model_data[workflow].get("timing_aggregate")
+                uagg = model_data[workflow].get("token_usage_aggregate")
+                if not tagg or not uagg:
+                    continue
+                lines.append(
+                    f"| {model_name} "
+                    f"| {uagg.get('total_tokens', 0)} "
+                    f"| {uagg.get('cached_tokens', 0)} "
+                    f"| {uagg.get('avg_total_tokens_per_query', 0)} "
+                    f"| {tagg.get('llm_s', 0):.1f} "
+                    f"| {tagg.get('tool_s', 0):.1f} "
+                    f"| {tagg.get('calc_load_s', 0):.1f} "
+                    f"| {tagg.get('agent_init_s', 0):.1f} "
+                    f"| {tagg.get('agent_wall_s', 0):.1f} |"
+                )
+            lines.append("")
+
     return "\n".join(lines)
 
 
